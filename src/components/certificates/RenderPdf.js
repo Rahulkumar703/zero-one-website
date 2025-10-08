@@ -6,8 +6,28 @@ import "react-pdf/dist/Page/TextLayer.css";
 import Button from "../button/Button";
 import { Skeleton } from "../ui/skeleton";
 
-// pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@4.8.69/legacy/build/pdf.worker.min.mjs`;
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.mjs`;
+// Initialize pdf.js worker using workerSrc only to let react-pdf manage lifecycle
+if (typeof window !== "undefined") {
+  try {
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+      "pdfjs-dist/build/pdf.worker.min.mjs",
+      import.meta.url
+    ).toString();
+  } catch (_) {
+    // ignore
+  }
+}
+
+if (typeof Promise.withResolvers !== "function") {
+  Promise.withResolvers = function () {
+    let resolve, reject;
+    const promise = new Promise((res, rej) => {
+      resolve = res;
+      reject = rej;
+    });
+    return { promise, resolve, reject };
+  };
+}
 
 const RenderPdf = ({ url, thumbnailMode = false, download = false }) => {
   const [numPages, setNumPages] = useState(null);
@@ -40,19 +60,33 @@ const RenderPdf = ({ url, thumbnailMode = false, download = false }) => {
     [thumbnailMode]
   );
 
+  const resizeDebounceRef = useRef(null);
+
   // Set up resize observer for container
   useEffect(() => {
     if (!containerRef.current) return;
 
+    // set initial width once
+    const initialWidth = containerRef.current.getBoundingClientRect().width;
+    setContainerWidth((prev) => prev ?? initialWidth);
+
     const resizeObserver = new ResizeObserver((entries) => {
       const width = entries[0].contentRect.width;
-      setContainerWidth(width);
+
+      if (resizeDebounceRef.current) clearTimeout(resizeDebounceRef.current);
+      resizeDebounceRef.current = setTimeout(() => {
+        // ignore tiny changes
+        setContainerWidth((prev) =>
+          prev && Math.abs(prev - width) < 2 ? prev : width
+        );
+      }, 300);
     });
 
     resizeObserver.observe(containerRef.current);
 
     return () => {
       resizeObserver.disconnect();
+      if (resizeDebounceRef.current) clearTimeout(resizeDebounceRef.current);
     };
   }, []);
 
@@ -66,9 +100,11 @@ const RenderPdf = ({ url, thumbnailMode = false, download = false }) => {
     setIsLoading(false);
   };
 
+  // Let react-pdf manage the loading task lifecycle; avoid manual destroy to prevent warnings
+
   return (
     <div
-      className={`relative w-full overflow-hidden rounded-2xl pointer-events-none ${
+      className={`relative w-full overflow-hidden rounded-lg border p-4 border-border pointer-events-none ${
         thumbnailMode ? "aspect-video" : ""
       }`}
       ref={containerRef}
@@ -77,11 +113,15 @@ const RenderPdf = ({ url, thumbnailMode = false, download = false }) => {
 
       {url && (
         <Document
+          key={url}
           file={url}
           options={renderOptions}
-          onLoadSuccess={onDocumentLoadSuccess}
+          onLoadSuccess={({ numPages }) => {
+            setNumPages(numPages);
+            setIsLoading(false);
+          }}
           onLoadError={onDocumentLoadError}
-          loading={<Skeleton className="w-full aspect-video " />}
+          loading={<Skeleton className="w-full aspect-video" />}
         >
           <Page
             pageNumber={pageNumber}

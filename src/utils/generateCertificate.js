@@ -29,9 +29,88 @@ function hexToRgb(hex) {
   return { r, g, b };
 }
 
+// Cache helpers
+const CERT_CACHE_PREFIX = "cert-v1";
+const CERT_CACHE_TTL_MS = 2 * 24 * 60 * 60 * 1000; // 2 days
+const CERT_CACHE_SIZE_CAP_BYTES = 1.5 * 1024 * 1024; // ~1.5MB
+
+function canUseLocalStorage() {
+  try {
+    if (typeof window === "undefined") return false;
+    const testKey = "__ls_test__";
+    window.localStorage.setItem(testKey, "1");
+    window.localStorage.removeItem(testKey);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function uint8ToBase64(uint8) {
+  let binary = "";
+  for (let i = 0; i < uint8.length; i++)
+    binary += String.fromCharCode(uint8[i]);
+  return btoa(binary);
+}
+
+function base64ToUint8(b64) {
+  const binary = atob(b64);
+  const len = binary.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+function buildCertCacheKey(certificateNumber) {
+  // If needed later, include template/fields hash here for stronger keys
+  return `${CERT_CACHE_PREFIX}|${certificateNumber}`;
+}
+
+function getCachedCertificateBytes(certificateNumber) {
+  if (!canUseLocalStorage()) return null;
+  try {
+    const key = buildCertCacheKey(certificateNumber);
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.data || !parsed.ts) return null;
+    const isExpired = Date.now() - parsed.ts > CERT_CACHE_TTL_MS;
+    if (isExpired) {
+      window.localStorage.removeItem(key);
+      return null;
+    }
+    return base64ToUint8(parsed.data);
+  } catch (_) {
+    return null;
+  }
+}
+
+function setCachedCertificateBytes(certificateNumber, bytes) {
+  if (!canUseLocalStorage()) return;
+  try {
+    if (!bytes || bytes.byteLength > CERT_CACHE_SIZE_CAP_BYTES) return;
+    const key = buildCertCacheKey(certificateNumber);
+    const envelope = {
+      data: uint8ToBase64(bytes),
+      ts: Date.now(),
+      size: bytes.byteLength,
+    };
+    window.localStorage.setItem(key, JSON.stringify(envelope));
+  } catch (_) {
+    // Best-effort: ignore quota or serialization errors
+  }
+}
+
 const generateCertificate = async (fields, template, certificateNumber) => {
   try {
     if (!template) throw new Error("Template is empty");
+    // Try cache first
+    const cachedBytes = getCachedCertificateBytes(certificateNumber);
+    if (cachedBytes) {
+      const blob = new Blob([cachedBytes], { type: "application/pdf" });
+      return URL.createObjectURL(blob);
+    }
+
     let pdfBuffer;
     if (typeof template === "string") {
       pdfBuffer = await fetch(template).then((res) => res.arrayBuffer());
@@ -100,6 +179,10 @@ const generateCertificate = async (fields, template, certificateNumber) => {
     );
 
     const modifiedPdfBytes = await pdfDoc.save();
+
+    // Store in cache (best effort)
+    setCachedCertificateBytes(certificateNumber, modifiedPdfBytes);
+
     const modifiedPdfBlob = new Blob([modifiedPdfBytes], {
       type: "application/pdf",
     });

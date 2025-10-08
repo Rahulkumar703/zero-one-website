@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0, 0%, 0%;
+    --background1: 0, 0%, 6%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0, 0%, 0%;
+    --primary-foreground: 0, 0%, 100%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 0, 100%, 60%;
+    --accent-light: 345, 100%, 60%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --radius: 0.5rem;
+  }
+}
+
+* {
+  @apply border-border;
+  accent-color: var(--accent);
+  font-family: var(--font-gilroy), sans-serif;
+}
+
+body {
+  @apply bg-background text-foreground accent-accent;
+  background: linear-gradient(
+    123deg,
+    hsl(var(--background)),
+    hsl(var(--background1))
+  );
+}
+@layer utilities {
+  .duration-800 {
+    transition-duration: 800ms;
+  }
+}
+
+::selection {
+  background: hsl(var(--primary-foreground));
+  color: hsl(var(--primary));
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: #6d6d6d;
+}
+
+.scroll-lock {
+  @apply relative h-full overflow-hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
+.container-70 {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.flex-2 {
+  flex: 0.5;
+}
+
+.flex-4 {
+  flex: 0.25;
+}
+
+.card {
+  @apply shadow-cus border border-l-white/5 border-t-white/5 border-r-black/25 border-b-black/25 rounded-3xl transition-colors;
+}
+
+.card.hover {
+  @apply hover:bg-white/10 transition-colors;
+}
+
+.fadeonscroll {
+  @apply translate-y-[200px] origin-bottom opacity-0 transition-all duration-1000 md:translate-y-[100px] md:duration-800;
+}
+
+.fadeonscroll-h {
+  @apply -translate-x-full origin-bottom opacity-0 transition-all duration-1000 md:duration-800;
+}
+
+.fadeonscroll-h.active {
+  @apply translate-x-0 opacity-100;
+}
+
+.fadeonscroll.active {
+  @apply translate-y-0 opacity-100;
+}
+
+.container-70 {
+  @apply xs:w-[85%] w-[70%] mx-auto;
+}
+.no-shadow {
+  box-shadow: none;
+}
+
+/* for navbar transition */
+
+.fade-up {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.cursor {
+  transform: translate(-50%, -50%);
+  @apply h-[10px] w-[10px] fixed top-0 left-0 z-[999] pointer-events-none rounded-2xl bg-accent;
+  transition: all 0.15s ease;
+  mix-blend-mode: difference;
+  @apply md:hidden;
+}
+/* .cursor {
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(-50%) translateY(-50%);
+  mix-blend-mode: difference;
+} */
+
+input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+label {
+  user-select: none;
+}
+
+img {
+  -webkit-user-drag: none;
+}
+
+input[type="color"] {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  height: 36px;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border-radius: 10px;
+  border: none;
+  border: 2px solid rgb(255, 255, 255, 0.5);
+}
+
+canvas.react-pdf__Page__canvas,
+.react-pdf__Page__textContent.textLayer,
+.react-pdf__Page__annotations.annotationLayer {
+  width: 100% !important;
+  height: auto !important;
+  user-select: none;
+  cursor: default;
+}
+
+.split {
+  display: flex;
+  flex-direction: row;
+}
+
+.gutter {
+  background: var(--background);
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.gutter:hover {
+  background: var(--accent);
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.gutter.gutter-horizontal {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+  cursor: col-resize;
+}
+
+/* .monaco-editor {
+  --vscode-editorGutter-background: var(--background);
+  --vscode-editor-background: var(--background)
+} */

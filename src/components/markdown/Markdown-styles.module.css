@@ -1,5 +1,5 @@
 .reactMarkDown {
-  @apply text-base text-inherit leading-relaxed space-y-4 font-medium;
+  @apply text-base text-inherit leading-relaxed space-y-4 font-light;
 }
 
 .reactMarkDown h1 {

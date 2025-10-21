@@ -7,6 +7,8 @@ const LANGUAGE_ID = {
   java: 62,
   python: 71,
   javascript: 63,
+  // TODO: Verify the language ID for SQL
+  sql: 60,
 };
 
 export const POST = async (req) => {

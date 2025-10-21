@@ -1,7 +1,7 @@
 "use client"; // Error boundaries must be Client Components
 
 import { useEffect } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export default function Error({ error, reset }) {
   useEffect(() => {

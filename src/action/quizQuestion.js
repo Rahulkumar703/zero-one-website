@@ -7,12 +7,12 @@ import { validateQuizQuestionForm } from "@/lib/validators";
 import { cache } from "react";
 import { convertIdsToString } from "@/utils/helper";
 
-export const getQuizQuestions = cache(async (feilds) => {
+export const getQuizQuestions = cache(async (fields) => {
   try {
     await connect();
 
     const questions = await QuizQuestion.find({})
-      .select(feilds)
+      .select(fields)
       .sort({ created_at: -1 })
       .lean();
 

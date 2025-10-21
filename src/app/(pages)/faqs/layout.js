@@ -1,12 +1,10 @@
-
 export const metadata = {
-    title: 'ZERO ONE | FAQ',
-    description: 'Zero-one Coding Club of Motihari College of Engineering, Motihari',
-}
-
+  title: "Frequently Asked Questions",
+  description:
+    "Frequently asked questions about Zero one Coding Club of MCE Motihari",
+};
 
 const layout = ({ children }) => {
-    return (children
-    )
-}
-export default layout
+  return children;
+};
+export default layout;

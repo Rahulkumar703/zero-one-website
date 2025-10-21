@@ -1,10 +1,10 @@
 "use client";
-import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "@/components/button/Button";
 import StyledInput from "@/components/input/StyledInput";
 import BottomGlitter from "@/components/StyledText/BottomGlitter";
 import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 export default function ProfileForm({ user }) {
   const { data: session, update } = useSession();

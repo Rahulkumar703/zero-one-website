@@ -34,9 +34,9 @@ const titleStyles = cva("font-semibold", {
 const quoteStyles = cva("font-normal", {
   variants: {
     size: {
-      default: "text-xs text-stone-400 leading-4 xs:leading-0 lg:text-xs",
+      default: "text-xs text-stone-400 xs:leading-4 leading-0 lg:text-xs",
       sm: "hidden",
-      lg: "text-md text-stone-400 leading-4 xs:leading-0 lg:text-sm",
+      lg: "text-md text-stone-400 xs:leading-4 leading-0 lg:text-sm",
     },
   },
   defaultVariants: {
@@ -48,14 +48,14 @@ const Logo = ({ size = "default", className }) => {
     <Link href="/" className={cn("flex items-stretch gap-4", className)}>
       <Image
         src={"/static/images/logo.png"}
-        quality={100}
-        width={50} // Set appropriate width
-        height={50} // Set appropriate height
+        quality={80}
+        width={50}
+        height={50}
         className={logoStyles({ size })}
         alt="ZERO ONE"
         priority
       />
-      {size !== "icon" && ( // Only show text if not in icon mode
+      {size !== "icon" && (
         <div className="flex flex-col justify-end translate-y-[1.5px]">
           <h1 className={titleStyles({ size })}>ZERO ONE</h1>
           <p className={quoteStyles({ size })}>Create. Code. Conquer.</p>

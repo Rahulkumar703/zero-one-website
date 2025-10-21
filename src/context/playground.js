@@ -143,6 +143,8 @@ export const PlaygroundProvider = ({ children }) => {
         const res = await fetch(`/api/playground?token=${token}`);
         const result = await res.json();
 
+        console.log(result, res);
+
         if (result?.data?.status?.id >= 3) {
           const output =
             result.data.stdout ||

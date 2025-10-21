@@ -1,7 +1,7 @@
 "use client";
 import { usePlayground } from "@/context/playground";
 import { useEffect } from "react";
-import Markdown from "react-markdown";
+import Markdown from "../markdown/Markdown";
 
 export const Question = ({ question }) => {
   const { setTestCases } = usePlayground();
@@ -73,8 +73,8 @@ export const Question = ({ question }) => {
               <h4 className="font-semibold text-foreground/50">
                 Example {index + 1}:
               </h4>
-              <div className="p-4 border-l-2">
-                <div className="flex items-center gap-2 flex-wrap">
+              <div className="p-4 border-l-2 space-y-4">
+                <div className="flex flex-col gap-2 flex-wrap">
                   <div className="font-medium text-foreground/50">Input</div>
                   {testCase?.input ? (
                     <div className="font-medium">
@@ -86,7 +86,7 @@ export const Question = ({ question }) => {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex flex-col gap-2 flex-wrap">
                   <div className="font-medium text-foreground/50">Output</div>
                   {testCase?.output ? (
                     <div className="font-medium">

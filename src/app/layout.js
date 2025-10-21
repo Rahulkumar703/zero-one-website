@@ -1,13 +1,13 @@
 import Footer from "@/components/footer/Footer";
-import Navbar from "@/components/navbar/Navbar";
+import Header from "@/components/header";
 import SocialsBar from "@/components/socialsbar/SocialsBar";
 import "@/styles/globals.css";
 import Providers from "./Providers";
-import { Toaster } from "react-hot-toast";
 import connect from "@/utils/dbConnect";
 import NextTopLoader from "nextjs-toploader";
 import "./polyfills";
 import localFont from "next/font/local";
+import { Toaster } from "sonner";
 
 const gilroy = localFont({
   src: [
@@ -91,33 +91,12 @@ export default async function RootLayout({ children }) {
           showSpinner={false}
         />
         <Providers>
-          <Navbar />
+          <Header />
           <SocialsBar />
           {children}
           <Footer />
         </Providers>
-        <Toaster
-          position="bottom-right"
-          toastOptions={{
-            style: {
-              background: "#000",
-              color: "#fff",
-              border: "1px solid rgba(255,255,255,0.25)",
-              borderRadius: "10px",
-            },
-
-            success: {
-              style: {
-                borderColor: "rgba(10,255,50,0.25)",
-              },
-            },
-            error: {
-              style: {
-                borderColor: "rgba(255,10,50,0.25)",
-              },
-            },
-          }}
-        />
+        <Toaster theme="dark" richColors={true} position="top-right" />
       </body>
     </html>
   );

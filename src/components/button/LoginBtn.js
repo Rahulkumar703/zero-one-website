@@ -29,10 +29,10 @@ const LoginBtn = ({ unmount = () => {} }) => {
     return () => document.removeEventListener("click", handleOutClick);
   });
 
-  return path === "/login" ? null : data?.user ? (
-    <div className="relative w-10 h-10">
+  return data?.user ? (
+    <div className="relative w-10 h-10 lg:block hidden">
       <button
-        className="w-full h-full rounded-full  border border-white/20 cursor-pointer flex items-center justify-center overflow-hidden"
+        className="w-full h-full rounded-full border border-border cursor-pointer flex items-center justify-center overflow-hidden"
         onClick={() => setActive((prev) => !prev)}
       >
         <ProfilePic />
@@ -42,37 +42,50 @@ const LoginBtn = ({ unmount = () => {} }) => {
           ref={popUpRef}
           className="absolute -right-[1rem] top-[75px] w-96 shadow-cus border backdrop-blur-3xl border-l-white/5 border-t-white/5 border-r-black/25 border-b-black/25  rounded-3xl flex flex-col gap-4 items-center p-4"
         >
-          <h3 className="font-semibold">{data.user.email}</h3>
           <div className="flex flex-col items-center mx-auto gap-2">
-            <div className="w-32 h-32 border border-white/10 rounded-full flex items-center justify-center">
-              {data?.user?.profilePic && data.user.profilePic !== "" ? (
+            <div className="w-32 h-32 border border-white/10 rounded-full">
+              {data.user.profilePic ? (
                 <Image
                   src={data.user.profilePic}
-                  quality={80}
-                  width={128}
-                  height={128}
+                  width={80}
+                  height={80}
+                  quality={100}
                   alt={data.user.name}
-                  className="object-cover object-center w-32 h-32 rounded-full"
+                  className="rounded-full w-full h-full object-cover object-center"
                 />
               ) : (
-                <UserCircle2 className="w-full h-full" />
+                <FaCircleUser size={100} />
               )}
             </div>
-            <h2 className="capitalize text-lg font-bold">
-              Hi, {data.user.name}
-            </h2>
+            <div className="flex flex-col gap-1 text-center">
+              <h2 className="capitalize text-lg font-bold">{data.user.name}</h2>
+              <p className="lowercase text-muted-foreground">
+                {data.user.email}
+              </p>
+              <p className="text-muted-foreground">{data.user.roll}</p>
+            </div>
           </div>
-          <div className="flex xs:flex-col gap-1 w-full">
-            <Link
-              href={`/user/${username}`}
-              onClick={() => setActive(false)}
-              className="flex-1 bg-white/5 p-2 py-3 flex justify-center rounded-l-2xl xs:rounded-2xl hover:bg-white/10 transition-all items-center"
-            >
-              Profile
-            </Link>
+          <div className="flex flex-col gap-2 w-full ">
+            <div className="flex flex-row gap-1">
+              {data && data.user && data.user.role === "ADMIN" ? (
+                <Link
+                  href="https://admin.zeroonemce.com"
+                  className="flex-1 bg-white/5 p-2 py-3 flex justify-center hover:bg-white/10 transition-all items-center rounded-r-none rounded-full"
+                >
+                  Admin
+                </Link>
+              ) : null}
+              <Link
+                href={`/user/${data.user.username}`}
+                onClick={unmount}
+                className="flex-1 bg-white/5 p-2 py-3 flex justify-center hover:bg-white/10 transition-all items-center rounded-l-none rounded-full"
+              >
+                Profile
+              </Link>
+            </div>
             <button
               onClick={signOut}
-              className="flex-1 bg-red-500 p-2 py-3 flex justify-center rounded-r-2xl xs:rounded-2xl hover:bg-red-600 transition-all items-center"
+              className="flex-1 bg-red-500 p-2 py-3 flex justify-center rounded-full hover:bg-red-600 transition-all items-center"
             >
               Logout
             </button>
@@ -81,8 +94,12 @@ const LoginBtn = ({ unmount = () => {} }) => {
       )}
     </div>
   ) : (
-    <Link href="/login" className="flex rounded-full" onClick={unmount}>
-      <Button varrient={"filled"}>
+    <Link
+      href="/login"
+      className="lg:flex rounded-full hidden"
+      onClick={unmount}
+    >
+      <Button variant={"filled"}>
         <MdLogin className="fill-inherit" />
         Login
       </Button>

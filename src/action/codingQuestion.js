@@ -1,10 +1,8 @@
 "use server";
 
-import { validateCodingQuestionForm } from "@/lib/validators";
 import CodingQuestion from "@/models/CodingQuestion";
 import connect from "@/utils/dbConnect";
 import { convertIdsToString } from "@/utils/helper";
-import { revalidatePath } from "next/cache";
 import { cache } from "react";
 
 export const getCodingQuestions = cache(async () => {
@@ -12,6 +10,7 @@ export const getCodingQuestions = cache(async () => {
     await connect();
 
     const questions = await CodingQuestion.find({})
+      .select("_id name slug difficulty description")
       .sort({ updated_at: -1 })
       .lean();
 
@@ -26,21 +25,28 @@ export const getCodingQuestions = cache(async () => {
   }
 });
 
-export const getCodingQuestion = cache(async (slug) => {
-  try {
-    await connect();
+export const getCodingQuestion = cache(
+  async (slug, privateTestCases = false) => {
+    try {
+      await connect();
 
-    const questions = await CodingQuestion.findOne({ slug })
-      .sort({ updated_at: -1 })
-      .lean();
+      const question = await CodingQuestion.findOne({ slug }).lean();
+      let questionWithTestCases = question;
 
-    return {
-      questions: convertIdsToString(questions),
-      type: "success",
-      success: true,
-    };
-  } catch (error) {
-    console.log(`Error in fetching questions: ${error}`);
-    return { message: error.message, type: "error", success: false };
+      if (!privateTestCases) {
+        const publicTestCases = question?.testCases?.filter(
+          (testCase) => testCase.isPublic
+        );
+        questionWithTestCases = { ...question, testCases: publicTestCases };
+      }
+      return {
+        question: convertIdsToString(questionWithTestCases),
+        type: "success",
+        success: true,
+      };
+    } catch (error) {
+      console.log(`Error in fetching questions: ${error}`);
+      return { message: error.message, type: "error", success: false };
+    }
   }
-});
+);

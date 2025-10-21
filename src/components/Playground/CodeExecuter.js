@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CiPlay1 } from "react-icons/ci";
-import toast from "react-hot-toast";
 import { Button } from "../ui/button";
 import { usePlayground } from "@/context/playground";
 import {
@@ -13,8 +11,20 @@ import {
   SelectValue,
 } from "../ui/select";
 import { LoaderCircle, Palette, Triangle } from "lucide-react";
+import { toast } from "sonner";
 
-const CodeExecuter = ({ testCases }) => {
+const LANGUAGE_MAP = {
+  c: "C (GCC 9.2.0)",
+  cpp: "C++ (GCC 9.2.0)",
+  java: "Java (OpenJDK 9)",
+  javascript: "JavaScript (Node 12.14.0)",
+  python: "Python (3.8.1)",
+  sql: "SQL (SQLite 3.27.2)",
+  html: "HTML (HTML5)",
+  css: "CSS (CSS3)",
+};
+
+const CodeExecuter = ({ testCases, allowedLanguages }) => {
   const { language, setLanguage, runCode, loading, theme, setTheme, error } =
     usePlayground();
   const [selectedLanguage, setSelectedLanguage] = useState(language);
@@ -68,11 +78,11 @@ const CodeExecuter = ({ testCases }) => {
           <SelectValue placeholder="Select Language" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="c">C (GCC 9.2.0)</SelectItem>
-          <SelectItem value="cpp">C++ (GCC 9.2.0)</SelectItem>
-          <SelectItem value="java">Java (OpenJDK 9)</SelectItem>
-          <SelectItem value="javascript">JavaScript (Node 12.14.0)</SelectItem>
-          <SelectItem value="python">Python (3.8.1)</SelectItem>
+          {allowedLanguages.map((lang) => (
+            <SelectItem key={lang} value={lang}>
+              {LANGUAGE_MAP[lang] || lang}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 

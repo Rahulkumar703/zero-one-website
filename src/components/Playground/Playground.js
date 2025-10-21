@@ -36,7 +36,10 @@ const Playground = ({ question }) => {
                 className="bg-white/5 border border-white/5 rounded-2xl"
                 defaultSize={70}
               >
-                <CodeExecuter questionId={question._id} />
+                <CodeExecuter
+                  questionId={question._id}
+                  allowedLanguages={question.allowedLanguages}
+                />
                 <CodeEditor />
               </Panel>
 

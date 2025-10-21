@@ -4,11 +4,11 @@ import Image from "next/image";
 import { useDropzone } from "@uploadthing/react";
 import { generateClientDropzoneAccept } from "uploadthing/client";
 import { useCallback, useState } from "react";
-import toast from "react-hot-toast";
 import { useUploadThing } from "@/utils/uploadthing";
 import { HiOutlineUserCircle } from "react-icons/hi2";
 import { useSession } from "next-auth/react";
 import { BiEdit } from "react-icons/bi";
+import { toast } from "sonner";
 
 const ProfilePhotoUpload = ({ profilePic }) => {
   const { data: session, update } = useSession();
@@ -45,8 +45,6 @@ const ProfilePhotoUpload = ({ profilePic }) => {
                 profilePic,
               },
             });
-
-            console.log(d);
           }
 
           toast[data.type](data.message);

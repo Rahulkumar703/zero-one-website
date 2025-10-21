@@ -14,11 +14,11 @@ const Error = ({ error, reset }) => {
         <h2 className="font-bold text-4xl">OOPs !</h2>
         <p className="max-w-72 text-center my-4 text-accent">{error.message}</p>
         <div className="flex items-center justify-between w-full">
-          <Button varrient={"outline"} onClick={goBack}>
+          <Button variant={"outline"} onClick={goBack}>
             <BiLeftArrow size={18} />
             Back
           </Button>
-          <Button varrient={"filled"} onClick={reset}>
+          <Button variant={"filled"} onClick={reset}>
             <BiRefresh size={20} />
             Try again
           </Button>

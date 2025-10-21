@@ -19,7 +19,7 @@ const Faq = ({ _id, question, answer, index }) => {
         className={`${styles.title}`}
         onClick={() => toggleFAQ(index)}
       >
-        <h2 className="text-2xl text-left sm:text-xl">{question}</h2>
+        <h2 className="text-xl text-left sm:text-2xl">{question}</h2>
         <BsChevronRight
           className={`ml-4 w-8 shrink-0 ${
             activeIndex === index ? "rotate-90" : "rotate-0"

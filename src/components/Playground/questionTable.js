@@ -9,25 +9,25 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
-  ArrowRight,
+  // ArrowRight,
   ArrowUpDown,
-  ChevronDown,
+  // ChevronDown,
   ChevronLeft,
   ChevronRight,
-  MoreHorizontal,
+  // MoreHorizontal,
   Search,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+// import {
+//   DropdownMenu,
+//   DropdownMenuCheckboxItem,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuLabel,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -59,7 +59,7 @@ export const columns = [
   //   cell: ({ row }) => <div className="capitalize">{row.getValue("week")}</div>,
   // },
   {
-    accessorKey: "title",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <Button
@@ -73,7 +73,7 @@ export const columns = [
       );
     },
     cell: ({ row }) => (
-      <div className="capitalize font-semibold">{row.getValue("title")}</div>
+      <div className="capitalize font-semibold">{row.getValue("name")}</div>
     ),
   },
   // {
@@ -108,9 +108,11 @@ export const columns = [
     accessorKey: "difficulty",
     sortingFn: (rowA, rowB) => {
       const difficultyMap = {
+        basic: 0,
         easy: 1,
         medium: 2,
         hard: 3,
+        expert: 4,
       };
       const difficultyA = difficultyMap[rowA.getValue("difficulty")] || 0; // Default to 0 if not found
       const difficultyB = difficultyMap[rowB.getValue("difficulty")] || 0; // Default to 0 if not found
@@ -254,9 +256,9 @@ function QuestionsTable({ data }) {
       <div className="flex flex-wrap items-center gap-2 relative my-2">
         <Input
           placeholder="Find Questions by Name..."
-          value={table.getColumn("title")?.getFilterValue() ?? ""}
+          value={table.getColumn("name")?.getFilterValue() ?? ""}
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-full pr-10"
         />
@@ -298,7 +300,10 @@ function QuestionsTable({ data }) {
         </DropdownMenu> */}
       </div>
       <div className="rounded-md border">
-        <Table>
+        <Table
+          containerClass="h-fit max-h-[calc(100vh-15rem)] overflow-y-auto relative"
+          className=""
+        >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -361,7 +366,7 @@ function QuestionsTable({ data }) {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            <ChevronLeft className="h-4 w-4 fill-none" />
+            <ChevronLeft className="mt-0.5 fill-none" />
             Previous
           </Button>
           <Button
@@ -371,7 +376,7 @@ function QuestionsTable({ data }) {
             disabled={!table.getCanNextPage()}
           >
             Next
-            <ChevronRight className="h-4 w-4 fill-none" />
+            <ChevronRight className="mt-0.5 fill-none" />
           </Button>
         </div>
       </div>

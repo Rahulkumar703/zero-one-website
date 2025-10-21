@@ -4,9 +4,9 @@ import StyledInput from "@/components/input/StyledInput";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { LuSend } from "react-icons/lu";
-import toast from "react-hot-toast";
 import Link from "next/link";
 import { addQuery } from "@/action/query";
+import { toast } from "sonner";
 function ThankYou({ show }) {
   const router = useRouter();
 
@@ -129,7 +129,7 @@ const ContactPage = () => {
               className="w-4/5"
             />
             <Button
-              varrient={"filled"}
+              variant={"filled"}
               type="submit"
               className={"ml-auto mt-16 flex rounded-full"}
               loading={loading}

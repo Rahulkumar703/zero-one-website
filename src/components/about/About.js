@@ -1,8 +1,8 @@
-"use client"
-import Link from 'next/link';
-import { useEffect, useRef } from 'react';
-import Button from '../button/Button';
-import BottomGlitter from '../StyledText/BottomGlitter';
+"use client";
+import Link from "next/link";
+import { useEffect, useRef } from "react";
+import Button from "../button/Button";
+import BottomGlitter from "../StyledText/BottomGlitter";
 
 function About() {
   const ref = useRef();
@@ -11,16 +11,16 @@ function About() {
     const handleScroll = () => {
       if (ref.current) {
         if (window.innerHeight + 100 > ref.current.getBoundingClientRect().y) {
-          ref.current.classList.add('active');
+          ref.current.classList.add("active");
         } else {
-          ref.current.classList.remove('active');
+          ref.current.classList.remove("active");
         }
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
   return (
     <section
@@ -29,7 +29,7 @@ function About() {
     >
       <BottomGlitter text="About Us" />
       <div className="my-6 py-2">
-        <p className="text-xl w-3/4 md:w-full md:text-lg sm:text-base leading-8">
+        <p className="text-base w-full md:w-3/4 md:text-lg sm:text-lg leading-8">
           Zero-one club is an initiative to bring together students interested
           in coding and associated skills in a peer-to-peer learning
           environment. We believe that a peer-to-peer learning environment is

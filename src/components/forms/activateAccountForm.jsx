@@ -69,7 +69,7 @@ const ActivateAccountForm = () => {
 
           <Button
             disabled={form.loading}
-            varrient={"filled"}
+            variant={"filled"}
             type="submit"
             className={"ml-auto"}
             loading={loading}

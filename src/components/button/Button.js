@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import Styles from "./Button.module.css";
 import { BiLoader } from "react-icons/bi";
 
-function Button({ className, loading, varrient, children, ...otherProps }) {
+function Button({ className, loading, variant, children, ...otherProps }) {
   const ref = useRef();
 
   useEffect(() => {
@@ -26,9 +26,9 @@ function Button({ className, loading, varrient, children, ...otherProps }) {
       className={`text-lg inline-block overflow-hidden relative rounded-full px-6 py-[10px] cursor-pointer font-semibold ${
         Styles.button
       } ${className} ${
-        varrient === "filled"
-          ? "bg-primary-light text-primary stroke-primary fill-primary disabled:hover:text-primary disabled:hover:fill-primary disabled:hover:stroke-primary hover:text-primary-light hover:fill-primary-light hover:stroke-primary-light"
-          : "text-primary-light stroke-primary-light fill-primary-light border border-white/25"
+        variant === "filled"
+          ? "bg-white text-primary stroke-primary fill-primary disabled:hover:text-primary disabled:hover:fill-primary disabled:hover:stroke-primary hover:text-white hover:fill-white hover:stroke-white"
+          : "text-white stroke-white fill-white border border-border"
       } `}
       {...otherProps}
     >

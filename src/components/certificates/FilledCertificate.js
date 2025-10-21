@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import Link from "next/link";
 import generateCertificate from "@/utils/generateCertificate";
 import { usePathname } from "next/navigation";
 import Button from "../button/Button";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
+import { toast } from "sonner";
 
 const RenderPdf = dynamic(() => import("./RenderPdf"), {
   ssr: false,

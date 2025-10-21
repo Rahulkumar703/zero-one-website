@@ -30,8 +30,8 @@
 
 .content > h1 {
   @apply cursor-default text-primary-light/60;
-  @apply my-8 mx-4 text-7xl z-30 font-extrabold relative;
-  @apply text-7xl xs:text-5xl;
+  @apply my-8 mx-4 z-30 font-extrabold relative;
+  @apply text-5xl xs:text-7xl;
 }
 
 .content > h1:hover {

@@ -1,5 +1,7 @@
-const Playground = async () => {
-  return <div className="container-70 py-4 h-screen">asd</div>;
+import { Playground as CodePlayground } from "@/components/codeEditor";
+
+const PlaygroundPage = async () => {
+  return <CodePlayground />;
 };
 
-export default Playground;
+export default PlaygroundPage;

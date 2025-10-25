@@ -27,12 +27,11 @@ greet("World");`,
     name: "C++ (GCC 9.2.0)",
     mode: "c_cpp",
     defaultCode: `// C++ Example
-#include <iostream>
-#include <string>
+#include <bits/stdc++.h>
+using namespace std;
 
 int main() {
-    std::string name = "World";
-    std::cout << "Hello, " << name << "!" << std::endl;
+    cout << "Hello, World!" << endl;
     return 0;
 }`,
   },

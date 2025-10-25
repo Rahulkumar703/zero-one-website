@@ -1,5 +1,6 @@
 import { getCodingQuestion } from "@/action/codingQuestion";
-import Playground from "@/components/Playground/Playground";
+import { Playground } from "@/components/codeEditor";
+
 export const generateMetadata = async ({ params }) => {
   const { slug } = await params;
   const { question } = await getCodingQuestion(slug);
@@ -13,7 +14,7 @@ const QuestionPage = async ({ params }) => {
   const { slug } = await params;
   const { question } = await getCodingQuestion(slug);
 
-  return <Playground question={question} />;
+  return <Playground problem={question} />;
 };
 
 export default QuestionPage;

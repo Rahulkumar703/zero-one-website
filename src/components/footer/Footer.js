@@ -110,7 +110,8 @@ const Footer = () => {
     pathname === "/login" ||
     pathname === "/recoverPassword" ||
     pathname.startsWith("/setPassword") ||
-    pathname.startsWith("/playground");
+    pathname.startsWith("/playground") ||
+    pathname.startsWith("/practice");
 
   return hiddenFooter ? null : <FooterUI />;
 };

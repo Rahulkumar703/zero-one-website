@@ -1,7 +1,7 @@
-import { Playground as CodePlayground } from "@/components/codeEditor";
+import { Playground } from "@/components/codeEditor";
 
 const PlaygroundPage = async () => {
-  return <CodePlayground />;
+  return <Playground />;
 };
 
 export default PlaygroundPage;

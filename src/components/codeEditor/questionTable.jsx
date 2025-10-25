@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/table";
 import { useState, useMemo } from "react";
 import { Badge } from "../ui/badge";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Select,
   SelectContent,
@@ -62,59 +62,59 @@ export const columns = [
       );
     },
     cell: ({ row }) => (
-      <div className="font-semibold text-foreground hover:text-primary transition-colors">
+      <div className="font-semibold text-foreground transition-colors">
         {row.getValue("name")}
       </div>
     ),
   },
-  {
-    accessorKey: "allowedLanguages",
-    header: ({ column }) => {
-      return (
-        <div className="w-full flex items-center justify-center">
-          <Button
-            variant="link"
-            className="text-foreground/60 hover:text-foreground p-0"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Languages
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const languages = row.getValue("allowedLanguages") || [];
-      return (
-        <div className="w-full flex items-center justify-center">
-          <div className="flex flex-wrap gap-1 justify-center">
-            {languages.slice(0, 3).map((lang, index) => (
-              <Badge
-                key={index}
-                variant="outline"
-                className="text-xs px-1.5 py-0.5 bg-muted/50 border-muted-foreground/20"
-              >
-                {lang.toUpperCase()}
-              </Badge>
-            ))}
-            {languages.length > 3 && (
-              <Badge
-                variant="outline"
-                className="text-xs px-1.5 py-0.5 bg-muted/50 border-muted-foreground/20"
-              >
-                +{languages.length - 3}
-              </Badge>
-            )}
-          </div>
-        </div>
-      );
-    },
-    filterFn: (row, id, value) => {
-      const languages = row.getValue(id) || [];
-      if (!value || value.length === 0) return true;
-      return value.some((lang) => languages.includes(lang));
-    },
-  },
+  // {
+  //   accessorKey: "allowedLanguages",
+  //   header: ({ column }) => {
+  //     return (
+  //       <div className="w-full flex items-center justify-center">
+  //         <Button
+  //           variant="link"
+  //           className="text-foreground/60 hover:text-foreground p-0"
+  //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //         >
+  //           Languages
+  //           <ArrowUpDown className="ml-2 h-4 w-4" />
+  //         </Button>
+  //       </div>
+  //     );
+  //   },
+  //   cell: ({ row }) => {
+  //     const languages = row.getValue("allowedLanguages") || [];
+  //     return (
+  //       <div className="w-full flex items-center justify-center">
+  //         <div className="flex flex-wrap gap-1 justify-center">
+  //           {languages.slice(0, 3).map((lang, index) => (
+  //             <Badge
+  //               key={index}
+  //               variant="outline"
+  //               className="text-xs px-1.5 py-0.5 bg-muted/50 border-muted-foreground/20"
+  //             >
+  //               {lang.toUpperCase()}
+  //             </Badge>
+  //           ))}
+  //           {languages.length > 3 && (
+  //             <Badge
+  //               variant="outline"
+  //               className="text-xs px-1.5 py-0.5 bg-muted/50 border-muted-foreground/20"
+  //             >
+  //               +{languages.length - 3}
+  //             </Badge>
+  //           )}
+  //         </div>
+  //       </div>
+  //     );
+  //   },
+  //   filterFn: (row, id, value) => {
+  //     const languages = row.getValue(id) || [];
+  //     if (!value || value.length === 0) return true;
+  //     return value.some((lang) => languages.includes(lang));
+  //   },
+  // },
   {
     accessorKey: "difficulty",
     sortingFn: (rowA, rowB) => {
@@ -131,7 +131,7 @@ export const columns = [
     },
     header: ({ column }) => {
       return (
-        <div className="w-full flex items-center justify-center">
+        <div className="w-full flex items-center justify-end">
           <Button
             variant="link"
             className="text-foreground/60 hover:text-foreground p-0"
@@ -174,7 +174,7 @@ export const columns = [
     accessorKey: "point",
     header: ({ column }) => {
       return (
-        <div className="w-full flex items-center justify-center">
+        <div className="w-full flex items-center justify-end">
           <Button
             variant="link"
             className="text-foreground/60 hover:text-foreground p-0"
@@ -187,60 +187,60 @@ export const columns = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-center font-semibold text-foreground">
+      <div className="text-right font-semibold text-foreground">
         <Badge variant="secondary" className="font-semibold">
           {row.getValue("point")} pts
         </Badge>
       </div>
     ),
   },
-  {
-    accessorKey: "timeLimit",
-    header: ({ column }) => {
-      return (
-        <div className="w-full flex items-center justify-center">
-          <Button
-            variant="link"
-            className="text-foreground/60 hover:text-foreground p-0"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Time Limit
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="text-center text-sm text-muted-foreground">
-        {row.getValue("timeLimit")}s
-      </div>
-    ),
-  },
-  {
-    accessorKey: "memoryLimit",
-    header: ({ column }) => {
-      return (
-        <div className="w-full flex items-center justify-center">
-          <Button
-            variant="link"
-            className="text-foreground/60 hover:text-foreground p-0"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Memory
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="text-center text-sm text-muted-foreground">
-        {row.getValue("memoryLimit")}MB
-      </div>
-    ),
-  },
+  // {
+  //   accessorKey: "timeLimit",
+  //   header: ({ column }) => {
+  //     return (
+  //       <div className="w-full flex items-center justify-center">
+  //         <Button
+  //           variant="link"
+  //           className="text-foreground/60 hover:text-foreground p-0"
+  //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //         >
+  //           Time Limit
+  //           <ArrowUpDown className="ml-2 h-4 w-4" />
+  //         </Button>
+  //       </div>
+  //     );
+  //   },
+  //   cell: ({ row }) => (
+  //     <div className="text-center text-sm text-muted-foreground">
+  //       {row.getValue("timeLimit")}s
+  //     </div>
+  //   ),
+  // },
+  // {
+  //   accessorKey: "memoryLimit",
+  //   header: ({ column }) => {
+  //     return (
+  //       <div className="w-full flex items-center justify-center">
+  //         <Button
+  //           variant="link"
+  //           className="text-foreground/60 hover:text-foreground p-0"
+  //           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //         >
+  //           Memory
+  //           <ArrowUpDown className="ml-2 h-4 w-4" />
+  //         </Button>
+  //       </div>
+  //     );
+  //   },
+  //   cell: ({ row }) => (
+  //     <div className="text-center text-sm text-muted-foreground">
+  //       {row.getValue("memoryLimit")}MB
+  //     </div>
+  //   ),
+  // },
 ];
 
-function QuestionsTable({ data }) {
+function QuestionsTable({ questions: data }) {
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -260,8 +260,8 @@ function QuestionsTable({ data }) {
       difficulty: item.difficulty || "medium",
       point: item.point || 0,
       allowedLanguages: item.allowedLanguages || [],
-      timeLimit: item.timeLimit || 1,
-      memoryLimit: item.memoryLimit || 256,
+      // timeLimit: item.timeLimit || 1,
+      // memoryLimit: item.memoryLimit || 256,
       slug: item.slug || item.name?.toLowerCase().replace(/\s+/g, "-") || "",
     }));
   }, [data]);
@@ -305,14 +305,6 @@ function QuestionsTable({ data }) {
     enableSubRowSelection: false,
   });
 
-  const router = useRouter();
-
-  const redirectToQuestion = (slug) => {
-    if (slug) {
-      router.push(`/practice/${slug}`);
-    }
-  };
-
   // Filter options
   const difficultyOptions = useMemo(() => {
     const difficulties = [
@@ -321,12 +313,12 @@ function QuestionsTable({ data }) {
     return difficulties.filter(Boolean).sort();
   }, [processedData]);
 
-  const languageOptions = useMemo(() => {
-    const languages = [
-      ...new Set(processedData.flatMap((item) => item.allowedLanguages || [])),
-    ];
-    return languages.filter(Boolean).sort();
-  }, [processedData]);
+  // const languageOptions = useMemo(() => {
+  //   const languages = [
+  //     ...new Set(processedData.flatMap((item) => item.allowedLanguages || [])),
+  //   ];
+  //   return languages.filter(Boolean).sort();
+  // }, [processedData]);
 
   // Clear filters function
   const clearFilters = () => {
@@ -376,7 +368,7 @@ function QuestionsTable({ data }) {
           </Select>
 
           {/* Language Filter */}
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
                 <Filter className="h-4 w-4" />
@@ -414,7 +406,7 @@ function QuestionsTable({ data }) {
                 </DropdownMenuCheckboxItem>
               ))}
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
 
           {/* Clear Filters */}
           <Button
@@ -462,10 +454,10 @@ function QuestionsTable({ data }) {
           )}
         </div>
       </div>
-      {/* Enhanced Table */}
+      {/* Enhanced Table with Scrollable Body */}
       <div className="rounded-md border bg-background">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 bg-background z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-b">
                 {headerGroup.headers.map((header) => {
@@ -483,39 +475,47 @@ function QuestionsTable({ data }) {
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  className="cursor-pointer hover:bg-muted/50 transition-colors"
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => redirectToQuestion(row.original.slug)}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-3">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center text-muted-foreground"
-                >
-                  {globalFilter || columnFilters.length > 0
-                    ? "No problems match your search criteria."
-                    : "No problems available."}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
         </Table>
+        <div className="max-h-[400px] overflow-y-auto">
+          <Table>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    className="hover:bg-muted/50 transition-colors"
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="py-0">
+                        <Link
+                          href={`/practice/${row.original.slug}`}
+                          className="block w-full h-full cursor-pointer py-3"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </Link>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center text-muted-foreground"
+                  >
+                    {globalFilter || columnFilters.length > 0
+                      ? "No problems match your search criteria."
+                      : "No problems available."}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {/* Enhanced Pagination */}

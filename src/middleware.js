@@ -9,7 +9,7 @@ const authenticationUrl = [
   "/activateAccount",
 ];
 
-const protectedRoutes = ["/practice"];
+const protectedRoutes = [];
 
 export default async function middleware(req) {
   const token = await getToken({ req });

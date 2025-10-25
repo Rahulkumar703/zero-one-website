@@ -10,7 +10,9 @@ export const getCodingQuestions = cache(async () => {
     await connect();
 
     const questions = await CodingQuestion.find({})
-      .select("_id name slug difficulty description")
+      .select(
+        "_id name slug difficulty description point timeLimit memoryLimit allowedLanguages"
+      )
       .sort({ updated_at: -1 })
       .lean();
 

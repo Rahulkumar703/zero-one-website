@@ -14,27 +14,88 @@ import {
   Clock,
   AlertCircle,
 } from "lucide-react";
+import {
+  usePlaygroundTestcases,
+  usePlaygroundActiveTestcase,
+  usePlaygroundResults,
+  usePlaygroundError,
+  usePlaygroundLoading,
+  usePlaygroundInitialize,
+  usePlaygroundSetActiveTestcase,
+  usePlaygroundAddTestcase,
+  usePlaygroundUpdateTestcase,
+  usePlaygroundRemoveTestcase,
+} from "../../stores/playgroundStore";
 
+/**
+ * TestCases Component - Comprehensive test case management and result display
+ *
+ * This component handles:
+ * - Test case input/output editing in tabbed interface
+ * - Real-time execution results from Judge0 API
+ * - Error display for compilation and runtime errors
+ * - Status indicators for each test case execution
+ *
+ * Architecture:
+ * - Initializes playground store with props-based data
+ * - Uses granular Zustand selectors to prevent unnecessary re-renders
+ * - Maintains local UI state (mainTab) while delegating data to store
+ * - Integrates with codeEditorStore for code execution workflow
+ *
+ * Props:
+ * @param {Array} testcases - Initial test cases from parent (e.g., Playground.jsx)
+ * @param {string} className - Additional CSS classes
+ */
 const TestCases = ({
-  testcases = [],
-  visibleTestcase = 0,
-  results = [],
-  error = null,
-  loading = false,
-  onVisibleTestcaseChange,
-  onAddTestcase,
-  onUpdateTestcase,
-  onRemoveTestcase,
+  // Props from Playground component (used for initialization only)
+  testcases: initialTestcases = [],
   className = "",
 }) => {
+  // Subscribe to specific pieces of playground state for optimal re-rendering
+  const testcases = usePlaygroundTestcases();
+  const activeTestcase = usePlaygroundActiveTestcase();
+  const results = usePlaygroundResults();
+  const error = usePlaygroundError();
+  const loading = usePlaygroundLoading();
+
+  // Get store actions (these don't cause re-renders)
+  const initializeTestcases = usePlaygroundInitialize();
+  const setActiveTestcase = usePlaygroundSetActiveTestcase();
+  const addTestcase = usePlaygroundAddTestcase();
+  const updateTestcase = usePlaygroundUpdateTestcase();
+  const removeTestcase = usePlaygroundRemoveTestcase();
+
+  /**
+   * Initialize playground store when component mounts
+   * This ensures the store has the correct initial data from props
+   */
+  useEffect(() => {
+    // Normalize testcase format to match store expectations
+    const formattedTestcases = initialTestcases.map((tc) => ({
+      stdin: tc.input || tc.stdin || "",
+      expected_output: tc.output || tc.expected_output || "",
+    }));
+
+    initializeTestcases(formattedTestcases);
+  }, [JSON.stringify(initialTestcases), initializeTestcases]);
+
+  // Local UI state for main tab navigation (testcases vs results)
   const [mainTab, setMainTab] = useState("testcases");
 
+  /**
+   * Auto-switch to results tab when execution starts
+   * Provides better UX by showing results immediately
+   */
   useEffect(() => {
     if (loading) {
       setMainTab("results");
     }
   }, [loading]);
 
+  /**
+   * Map Judge0 status IDs to human-readable descriptions
+   * Reference: https://github.com/judge0/judge0/blob/master/CHANGELOG.md
+   */
   const getStatusDescription = (statusId) => {
     const statusMap = {
       1: "In Queue",
@@ -150,47 +211,64 @@ const TestCases = ({
   };
 
   return (
-    <Card className={`border-border/30 bg-background ${className}`}>
-      <CardContent className="p-0">
+    <Card
+      className={`border-border/30 bg-background ${className} flex flex-col h-full`}
+    >
+      <CardContent className="p-0 flex flex-col h-full">
         {/* Main Tabs */}
-        <Tabs value={mainTab} onValueChange={setMainTab} className="w-full">
-          <div className="border-b border-border/30 px-4 pt-4">
+        <Tabs
+          value={mainTab}
+          onValueChange={setMainTab}
+          className="w-full flex flex-col h-full"
+        >
+          {/* Sticky Tabs Header */}
+          <div className="border-b border-border/30 px-4 pt-4 bg-background sticky top-0 z-10 flex-shrink-0">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="testcases">Test Cases</TabsTrigger>
               <TabsTrigger value="results">Test Results</TabsTrigger>
             </TabsList>
           </div>
 
-          {/* Test Cases Tab */}
-          <TabsContent value="testcases" className="p-4 space-y-4 mt-0">
-            <TestCase
-              testcases={testcases}
-              visibleTestcase={visibleTestcase}
-              loading={loading}
-              onAddTestcase={onAddTestcase}
-              onVisibleTestcaseChange={onVisibleTestcaseChange}
-              onUpdateTestcase={onUpdateTestcase}
-              onRemoveTestcase={onRemoveTestcase}
-            />
-          </TabsContent>
-          {/* Test Results Tab */}
-          <TabsContent value="results" className="p-4 space-y-4 mt-0">
-            <TestResult
-              testcases={testcases}
-              visibleTestcase={visibleTestcase}
-              results={results}
-              error={error}
-              loading={loading}
-              onVisibleTestcaseChange={onVisibleTestcaseChange}
-              getTestcaseStatus={getTestcaseStatus}
-              getStatusIcon={getStatusIcon}
-              getStatusColor={getStatusColor}
-              getStatusDescription={getStatusDescription}
-              isErrorStatus={isErrorStatus}
-              isGlobalError={isGlobalError}
-              isIndividualError={isIndividualError}
-            />
-          </TabsContent>
+          {/* Scrollable Content Area */}
+          <div className="flex-1 overflow-hidden">
+            {/* Test Cases Tab */}
+            <TabsContent
+              value="testcases"
+              className="p-4 h-full overflow-y-auto mt-0"
+            >
+              <TestCase
+                testcases={testcases}
+                activeTestcase={activeTestcase}
+                loading={loading}
+                onAddTestcase={addTestcase}
+                onActiveTestcaseChange={setActiveTestcase}
+                onUpdateTestcase={updateTestcase}
+                onRemoveTestcase={removeTestcase}
+              />
+            </TabsContent>
+
+            {/* Test Results Tab */}
+            <TabsContent
+              value="results"
+              className="p-4 h-full overflow-y-auto mt-0"
+            >
+              <TestResult
+                testcases={testcases}
+                activeTestcase={activeTestcase}
+                results={results}
+                error={error}
+                loading={loading}
+                onActiveTestcaseChange={setActiveTestcase}
+                getTestcaseStatus={getTestcaseStatus}
+                getStatusIcon={getStatusIcon}
+                getStatusColor={getStatusColor}
+                getStatusDescription={getStatusDescription}
+                isErrorStatus={isErrorStatus}
+                isGlobalError={isGlobalError}
+                isIndividualError={isIndividualError}
+              />
+            </TabsContent>
+          </div>
         </Tabs>
       </CardContent>
     </Card>
@@ -199,15 +277,15 @@ const TestCases = ({
 
 const TestCase = ({
   testcases = [],
-  visibleTestcase = 0,
+  activeTestcase = 0,
   loading = false,
   onAddTestcase,
-  onVisibleTestcaseChange,
+  onActiveTestcaseChange,
   onUpdateTestcase,
   onRemoveTestcase,
 }) => {
   return (
-    <>
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">Manage Test Cases</h3>
         <Button
@@ -228,8 +306,8 @@ const TestCase = ({
             <div key={index} className="relative flex-shrink-0">
               <Button
                 size="sm"
-                variant={index === visibleTestcase ? "secondary" : "outline"}
-                onClick={() => onVisibleTestcaseChange(index)}
+                variant={index === activeTestcase ? "secondary" : "outline"}
+                onClick={() => onActiveTestcaseChange(index)}
                 className="gap-2 min-w-fit pr-6"
               >
                 Case {index + 1}
@@ -256,9 +334,9 @@ const TestCase = ({
             </label>
             <Textarea
               placeholder="Enter input for this test case..."
-              value={testcases[visibleTestcase]?.stdin || ""}
+              value={testcases[activeTestcase]?.stdin || ""}
               onChange={(e) =>
-                onUpdateTestcase(visibleTestcase, "stdin", e.target.value)
+                onUpdateTestcase(activeTestcase, "stdin", e.target.value)
               }
               className="min-h-[100px] font-mono text-sm"
               disabled={loading}
@@ -271,10 +349,10 @@ const TestCase = ({
             </label>
             <Textarea
               placeholder="Enter expected output for this test case..."
-              value={testcases[visibleTestcase]?.expected_output || ""}
+              value={testcases[activeTestcase]?.expected_output || ""}
               onChange={(e) =>
                 onUpdateTestcase(
-                  visibleTestcase,
+                  activeTestcase,
                   "expected_output",
                   e.target.value
                 )
@@ -285,17 +363,17 @@ const TestCase = ({
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 
 const TestResult = ({
   testcases = [],
-  visibleTestcase = 0,
+  activeTestcase = 0,
   results = [],
   error = null,
   loading = false,
-  onVisibleTestcaseChange,
+  onActiveTestcaseChange,
   getTestcaseStatus,
   getStatusIcon,
   getStatusColor,
@@ -376,10 +454,8 @@ const TestResult = ({
                   <Button
                     key={index}
                     size="sm"
-                    variant={
-                      index === visibleTestcase ? "secondary" : "outline"
-                    }
-                    onClick={() => onVisibleTestcaseChange(index)}
+                    variant={index === activeTestcase ? "secondary" : "outline"}
+                    onClick={() => onActiveTestcaseChange(index)}
                     className="gap-2 min-w-fit"
                   >
                     {getStatusIcon(status)}
@@ -393,9 +469,9 @@ const TestResult = ({
             {testcases.length > 0 && (
               <div className="space-y-4">
                 {(() => {
-                  const result = results[visibleTestcase];
-                  const testcase = testcases[visibleTestcase];
-                  const status = getTestcaseStatus(visibleTestcase);
+                  const result = results[activeTestcase];
+                  const testcase = testcases[activeTestcase];
+                  const status = getTestcaseStatus(activeTestcase);
 
                   return (
                     <div className={`rounded-lg`}>
@@ -423,13 +499,13 @@ const TestResult = ({
                       </div>
 
                       {/* Test Case Content in Columns */}
-                      <div className="grid grid-cols-1 gap-4 overflow-y-auto max-h-[300px]">
+                      <div className="grid grid-cols-1 gap-4">
                         {/* Input */}
                         <div className="space-y-2">
                           <label className="text-sm font-medium text-foreground/80">
                             Input:
                           </label>
-                          <div className="bg-muted/50 border border-border/30 rounded p-3 max-h-[100px] overflow-y-auto">
+                          <div className="bg-muted/50 border border-border/30 rounded p-3">
                             <pre className="text-sm font-mono whitespace-pre-wrap">
                               {testcase.stdin || "No input"}
                             </pre>
@@ -441,7 +517,7 @@ const TestResult = ({
                           <label className="text-sm font-medium text-foreground/80">
                             Expected Output:
                           </label>
-                          <div className="bg-muted/50 border border-border/30 rounded p-3 max-h-[100px] overflow-y-auto">
+                          <div className="bg-muted/50 border border-border/30 rounded p-3">
                             <pre className="text-sm font-mono whitespace-pre-wrap">
                               {testcase.expected_output || "No expected output"}
                             </pre>
@@ -456,7 +532,7 @@ const TestResult = ({
                               : "Actual Output:"}
                           </label>
                           <div
-                            className={`rounded p-3 max-h-[100px] overflow-y-auto bg-muted/50 border border-border/30${
+                            className={`rounded p-3 bg-muted/50 border border-border/30${
                               status === "passed"
                                 ? "text-green-500"
                                 : status === "timeout" ||

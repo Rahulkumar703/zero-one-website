@@ -6,8 +6,20 @@ import { useEffect, useRef, useState } from "react";
 
 const ICON_SIZE = 30;
 
+const hiddenSocialsPaths = [
+  "/login",
+  "/recoverPassword",
+  "/setPassword",
+  "/playground",
+  "/practice",
+];
+
 function SocialsBarUI() {
   const pathname = usePathname();
+
+  if (hiddenSocialsPaths.some((path) => pathname.startsWith(path))) {
+    return null;
+  }
 
   const socialRef = useRef();
 

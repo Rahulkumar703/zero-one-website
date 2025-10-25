@@ -1,4 +1,4 @@
-import { getCodingQuestion } from "@/action/codingQuestion";
+import { getCodingQuestion, getCodingQuestions } from "@/action/codingQuestion";
 import { Playground } from "@/components/codeEditor";
 
 export const generateMetadata = async ({ params }) => {
@@ -8,6 +8,14 @@ export const generateMetadata = async ({ params }) => {
     title: question?.name || "Problem Not Found",
     description: question?.description || "No description available",
   };
+};
+
+export const generateStaticParams = async () => {
+  const { questions } = await getCodingQuestions();
+
+  return questions.map((question) => ({
+    slug: question.slug,
+  }));
 };
 
 const QuestionPage = async ({ params }) => {

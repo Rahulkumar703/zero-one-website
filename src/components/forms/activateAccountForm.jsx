@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import StyledInput from "../input/StyledInput";
@@ -11,7 +11,6 @@ const ActivateAccountForm = () => {
   const token = useSearchParams().get("token");
   //   if (!token) redirect("/login");
 
-  const router = useRouter();
   const [form, setForm] = useState({
     password: "",
     confirmPassword: "",
@@ -19,7 +18,7 @@ const ActivateAccountForm = () => {
   });
 
   const handleChange = (e) => {
-    setSignupForm((prev) => ({
+    setForm((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));

@@ -11,11 +11,7 @@ const ActivateAccountPage = () => {
   return (
     <section className="container-70 text-lg">
       <div className="mt-16">
-        {isLoading ? null : data?.user?.firstName ? (
-          <BottomGlitter text={`hi, ${data?.user?.firstName} `} />
-        ) : (
-          <BottomGlitter text={`Why are you here?`} />
-        )}
+        <BottomGlitter text={`Hi, Activate your account`} />
       </div>
       <ActivateAccountForm />
     </section>

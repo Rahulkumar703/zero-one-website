@@ -7,6 +7,3 @@ export { default as EditorControls } from "./EditorControls";
 
 // Supporting Modules
 export { default as theme, languageConfigs } from "./editorConfigs";
-
-// Custom Hook
-export { useCodeEditor } from "../../hooks/useCodeEditor";

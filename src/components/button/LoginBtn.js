@@ -8,6 +8,7 @@ import { MdLogin } from "react-icons/md";
 import ProfilePic from "../Profile/ProfilePic";
 import { UserCircle2 } from "lucide-react";
 import Image from "next/image";
+import { FaCircleUser } from "react-icons/fa6";
 
 const LoginBtn = ({ unmount = () => {} }) => {
   const [active, setActive] = useState(false);

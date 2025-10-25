@@ -17,10 +17,6 @@ const hiddenSocialsPaths = [
 function SocialsBarUI() {
   const pathname = usePathname();
 
-  if (hiddenSocialsPaths.some((path) => pathname.startsWith(path))) {
-    return null;
-  }
-
   const socialRef = useRef();
 
   const [prevScrollY, setPrevScrollY] = useState(0);
@@ -45,6 +41,9 @@ function SocialsBarUI() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollY]);
 
+  if (hiddenSocialsPaths.some((path) => pathname.startsWith(path))) {
+    return null;
+  }
   return (
     <section ref={socialRef} className={Styles.socialsBar}>
       <a href="#" target="_blank" rel="noreferrer">
